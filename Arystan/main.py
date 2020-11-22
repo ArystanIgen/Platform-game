@@ -5,16 +5,10 @@ from blocks import *
 from starting_game import *
 import pyganim
 # Объявляем переменные
-WIN_WIDTH = 700  # Ширина создаваемого окна
-WIN_HEIGHT = 400  # Высота
+WIN_WIDTH = 800 # Ширина создаваемого окна
+WIN_HEIGHT = 600  # Высота
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)  # Группируем ширину и высоту в одну переменную
-BACKGROUND_COLOR = "#004400"
-
-
-
-
-
-
+BACKGROUND_COLOR = "#032973"
 class Camera(object):
     def __init__(self, camera_func, width, height):
         self.camera_func = camera_func
@@ -39,12 +33,12 @@ def camera_configure(camera, target_rect):
 
 def main():
     game=Game()
+    xbg=ybg=0
+    xbg1=-WIN_WIDTH
+    ybg1=0
     pygame.init()  # Инициация PyGame, обязательная строчка
     screen = pygame.display.set_mode(DISPLAY)  # Создаем окошко
-    pygame.display.set_caption("Super p_move Boy")  # Пишем в шапку
-    bg = Surface((WIN_WIDTH, WIN_HEIGHT))  # Создание видимой поверхности
-    # будем использовать как фон
-    bg.fill(Color(BACKGROUND_COLOR))  # Заливаем поверхность сплошным цветом
+    pygame.display.set_caption("Super p_move Boy")
     hero = Player(55, 55,game)  # создаем героя по (x,y) координатам
     left = right = False
     up=down=False
@@ -75,7 +69,6 @@ def main():
         "-           ***                  -",
         "-                                -",
         "----------------------------------"]
-
     timer = pygame.time.Clock()
     x = y = 0  # координаты
     for row in level:  # вся строка
@@ -95,49 +88,66 @@ def main():
     total_level_width = len(level[0]) * PLATFORM_WIDTH  # Высчитываем фактическую ширину уровня
     total_level_height = len(level) * PLATFORM_HEIGHT  # высоту
     camera = Camera(camera_configure, total_level_width, total_level_height)
+    bg = Entity()  # Пишем в шапку
+    bg.image = pygame.image.load("blocks/gif.gif")
+    bg.rect = Rect(0, 0, len(level[0]) * PLATFORM_WIDTH, len(level) * PLATFORM_HEIGHT)
+    bg.image = pygame.transform.scale(bg.image, (len(level[0]) * PLATFORM_WIDTH, len(level) * PLATFORM_HEIGHT))
+    game.backentity.add(bg)
     while 1:  # Основной цикл программы
-        timer.tick(60)
-        for e in pygame.event.get():  # Обрабатываем события
-            if e.type == QUIT:
-                raise SystemExit
-            if e.type == KEYDOWN and e.key == K_LEFT:
-                left = True
-            if e.type == KEYDOWN and e.key == K_RIGHT:
-                right = True
+        timer.tick(70)
+        if game.screenfocus == "Title":
+            for e in game.titlegroup: screen.blit(e.image, (0, 0))
+            for e in game.menugroup: screen.blit(e.image, (e.rect.x, e.rect.y))
+            game.title.update()
+        if game.screenfocus == "Pause Menu":
+            for e in game.titlegroup: screen.blit(e.image, (0, 0))
+            for e in game.menugroup: screen.blit(e.image, (e.rect.x, e.rect.y))
+            game.pausemenu.update()
+        if game.screenfocus=='Game':
+            for e in pygame.event.get():  # Обрабатываем события
+                if e.type == QUIT:
+                    raise SystemExit
+                if e.type == KEYDOWN and e.key == K_LEFT:
+                    left = True
+                if e.type == KEYDOWN and e.key == K_RIGHT:
+                    right = True
 
-            if e.type == KEYUP and e.key == K_RIGHT:
-                right = False
-            if e.type == KEYUP and e.key == K_LEFT:
-                left = False
-
-
-            if e.type == KEYDOWN and e.key == K_UP:
-                up = True
-            if e.type == KEYUP and e.key == K_UP:
-                up = False
-
-
-            if e.type == KEYDOWN and e.key == K_DOWN:
-                down = True
-            if e.type == KEYUP and e.key == K_DOWN:
-                down = False
-
-            if e.type == KEYDOWN and e.key == K_SPACE:
-                space=True
-            if e.type == KEYUP and e.key == K_SPACE:
-                space = False
+                if e.type == KEYUP and e.key == K_RIGHT:
+                    right = False
+                if e.type == KEYUP and e.key == K_LEFT:
+                    left = False
 
 
+                if e.type == KEYDOWN and e.key == K_UP:
+                    up = True
+                if e.type == KEYUP and e.key == K_UP:
+                    up = False
 
-        screen.blit(bg, (0, 0))  # Каждую итерацию необходимо всё перерисовывать
-        hero.update(left,right,up,down,space,game.platforms)
-        # передвижение
-        camera.update(hero)  # центризируем камеру относительно персонажа
-        for e in game.entities:
-            screen.blit(e.image, camera.apply(e))
-        for e in game.projectilegroup:
-            e.update(game.platforms)
-            screen.blit(e.image,camera.apply(e))
+
+                if e.type == KEYDOWN and e.key == K_DOWN:
+                    down = True
+                if e.type == KEYUP and e.key == K_DOWN:
+                    down = False
+
+                if e.type == KEYDOWN and e.key == K_SPACE:
+                    space=True
+                if e.type == KEYUP and e.key == K_SPACE:
+                    space = False
+
+                if e.type == KEYDOWN and e.key == K_ESCAPE:
+                    game.pausemenu.createpausemenu()
+                    game.screenfocus = "Pause Menu"
+            for e in game.backentity:
+                screen.blit(e.image, camera.apply(e))
+            #Каждую итерацию необходимо всё перерисовывать
+            hero.update(left,right,up,down,space,game.platforms)
+            # передвижение
+            camera.update(hero)  # центризируем камеру относительно персонажа
+            for e in game.entities:
+                screen.blit(e.image, camera.apply(e))
+            for e in game.projectilegroup:
+                e.update(game.platforms)
+                screen.blit(e.image,camera.apply(e))
         pygame.display.update()
         #обновление и вывод всех изменений на экран
 
