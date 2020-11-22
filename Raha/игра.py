@@ -1,10 +1,35 @@
+spritesheet = pygame.image.load("Media/Graphics/item.png")
+
+character = Surface((78, 59), pygame.SRCALPHA)
+character.blit(spritesheet, (-37, -4))
+character = pygame.transform.scale(character, (78 * 3, 59 * 3))
+stage = Surface((300, 150), pygame.SRCALPHA)
+stage.blit(character, (130, 0))
+itemframe1 = stage #pervaya stadia svecheniya priza
+
+character = Surface((78, 59), pygame.SRCALPHA)
+character.blit(spritesheet, (-37, -66))
+character = pygame.transform.scale(character, (78 * 3, 59 * 3))
+stage = Surface((300, 150), pygame.SRCALPHA)
+stage.blit(character, (130, 0))
+itemframe2 = stage  #vtoraya stadia svecheniya priza
+
+character = Surface((78, 59), pygame.SRCALPHA)
+character.blit(spritesheet, (-37, -128))
+character = pygame.transform.scale(character, (78 * 3, 59 * 3))
+stage = Surface((300, 150), pygame.SRCALPHA)
+stage.blit(character, (130, 0))
+itemframe3 = stage #tret'ya stadia svecheniya priza
+
+itemloop = [itemframe1, itemframe2, itemframe3]
+
 class Item(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = itemframe1
+        self.image = itemframe1 #картинка кубка
         self.rect = Rect(x*3,y*3,78*3,59*3)
         self.counter = 0
-        self.detectable = pygame.sprite.Sprite()
+        self.detectable = pygame.sprite.Sprite() #sozdaet object
         self.detectable.rect = Rect(x*3, y*3, 64,64)
         self.detectable.rect.x = self.detectable.rect.x + 190
         self.detectable.rect.y = self.detectable.rect.y + 60
@@ -13,9 +38,14 @@ class Item(Entity):
         self.detectable.image.set_alpha(150)
         self.detectable.image.convert_alpha()
     def update(self):
-        if self.counter == 0: self.image = itemloop[0]
-        if self.counter == 10: self.image = itemloop[1]
-        if self.counter == 20:
+        if self.counter == 0: self.image = itemloop[0] #если количество кадров в секунду =0 => показываем первую
+                                                        #стадию свечения кубка
+        if self.counter == 10: self.image = itemloop[1] #если количество кадров в секунду =10 => показываем вторую
+                                                        #стадию свечения кубка
+
+        if self.counter == 20: #если количество кадров в секунду =20 => показываем последнюю стадию
+                                                        # свечения кубка, затем обнуляем counter
+
             self.image = itemloop[2]
             self.counter = 0
         self.counter = self.counter + 1
@@ -29,12 +59,12 @@ class PauseMenu(object):
         self.game.menugroup.empty()
         #Create Background Sprite
         bg = Entity()
-        bg.image = pygame.image.load("Media/Graphics/Backgrounds/title.jpg")
+        bg.image = pygame.image.load("title.jpg")
         self.game.titlegroup.add(bg)
         #Create String Sprite
         ss = Entity()
         font = pygame.font.Font(None, 80)
-        ss.image = font.render("Paused", 1, (255, 255, 255))
+        ss.image = font.render("Пауза", 1, (255, 255, 255))
         ss.rect = Rect(0,0,100,100)
         ss.rect.x = 290
         ss.rect.y = 400
