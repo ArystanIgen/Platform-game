@@ -1,14 +1,20 @@
+from html import entities
+
 import pygame
+from IPython.core.release import platforms
 from pygame import *
+from Almaz.blocks import KUBOK
+from Almaz.monsters import Monster
+from Almaz.starting_game import Game
 from player import *
 from blocks import *
+from Almaz.starting_game import *
 import pyganim
 # Объявляем переменные
 WIN_WIDTH = 800  # Ширина создаваемого окна
 WIN_HEIGHT = 640  # Высота
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)  # Группируем ширину и высоту в одну переменную
 BACKGROUND_COLOR = "#004400"
-
 
 class Camera(object):
     def __init__(self, camera_func, width, height):
@@ -33,18 +39,24 @@ def camera_configure(camera, target_rect):
     return Rect(l, t, w, h)
 
 def main():
+    game=Game()
     pygame.init()  # Инициация PyGame, обязательная строчка
     screen = pygame.display.set_mode(DISPLAY)  # Создаем окошко
     pygame.display.set_caption("Super p_move Boy")  # Пишем в шапку
     bg = Surface((WIN_WIDTH, WIN_HEIGHT))  # Создание видимой поверхности
     # будем использовать как фон
     bg.fill(Color(BACKGROUND_COLOR))  # Заливаем поверхность сплошным цветом
-    hero = Player(55, 55)  # создаем героя по (x,y) координатам
+    hero = Player(55, 55,game)  # создаем героя по (x,y) координатам
+    monsters = pygame.sprite.Group()
+    mn = Monster(190, 200, 2, 3, 150, 15)
+    entities.add(mn)
+    platforms.append(mn)
+    monsters.add(mn)
+    monsters.update(platforms)
     left = right = False
     up=down=False
-    entities = pygame.sprite.Group()  # Все объекты
-    platforms = []  # то, во что мы будем врезаться или опираться
-    entities.add(hero)
+    space=False
+    game.entities.add(hero)
     level = [
         "----------------------------------",
         "-                                -",
@@ -53,22 +65,22 @@ def main():
         "-                                -",
         "-            --                  -",
         "--                               -",
-        "-                                -",
+        "-                    m           -",
         "-                   ----     --- -",
         "-                                -",
         "--                               -",
-        "-            *                   -",
+        "-            *                 с  -",
         "-                            --- -",
         "-                                -",
         "-                                -",
         "-  *   ---                  *    -",
-        "-                                -",
+        "-        m                       -",
         "-   -------         ----         -",
         "-                                -",
         "-                         -      -",
         "-                            --  -",
         "-           ***                  -",
-        "-                                -",
+        "-                   m            -",
         "----------------------------------"]
 
     timer = pygame.time.Clock()
@@ -77,19 +89,23 @@ def main():
         for col in row:  # каждый символ
             if col == "-":
                 pf = Platform(x, y)
-                entities.add(pf)
-                platforms.append(pf)
+                game.entities.add(pf)
+                game.platforms.append(pf)
             if col == "*":
                 bd = BlockDie(x, y)
-                entities.add(bd)
-                platforms.append(bd)
+                game.entities.add(bd)
+                game.platforms.append(bd)
+            if col == "c":
+                kk = KUBOK(x,y)
+                entities.add(kk)
+                platforms.append(kk)
+                animatedEntities.add(kk)
 
             x += PLATFORM_WIDTH  # блоки платформы ставятся на ширине блоков
         y += PLATFORM_HEIGHT  # то же самое и с высотой
         x = 0  # на каждой новой строчке начинаем с нуля
     total_level_width = len(level[0]) * PLATFORM_WIDTH  # Высчитываем фактическую ширину уровня
     total_level_height = len(level) * PLATFORM_HEIGHT  # высоту
-
     camera = Camera(camera_configure, total_level_width, total_level_height)
     while 1:  # Основной цикл программы
         timer.tick(60)
@@ -118,13 +134,24 @@ def main():
             if e.type == KEYUP and e.key == K_DOWN:
                 down = False
 
+            if e.type == KEYDOWN and e.key == K_SPACE:
+                space=True
+            if e.type == KEYUP and e.key == K_SPACE:
+                space = False
+
+
 
         screen.blit(bg, (0, 0))  # Каждую итерацию необходимо всё перерисовывать
-        hero.update(left,right,up,down,platforms)  # передвижение
+        hero.update(left,right,up,down,space,game.platforms)
+        # передвижение
         camera.update(hero)  # центризируем камеру относительно персонажа
-        for e in entities:
+        for e in game.entities:
             screen.blit(e.image, camera.apply(e))
-        pygame.display.update()  # обновление и вывод всех изменений на экран
+        for e in game.projectilegroup:
+            e.update(game.platforms)
+            screen.blit(e.image,camera.apply(e))
+        pygame.display.update()
+        #обновление и вывод всех изменений на экран
 
 
 if __name__ == "__main__":

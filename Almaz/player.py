@@ -1,6 +1,20 @@
 from pygame import *
+
+import monsters
 import pyganim
 import blocks
+import pygame
+spritesheet = pygame.image.load("blocks/bustershots2.png")
+character = Surface((12,13),pygame.SRCALPHA)
+character.blit(spritesheet,(-37,-80))
+character = pygame.transform.scale(character, (40,20))
+stage = Surface((400,250),pygame.SRCALPHA)
+stage.blit(character,(40,0))
+bustershot1 = stage
+
+
+
+
 JUMP_POWER = 10
 GRAVITY = 0.35 # Сила, которая будет тянуть нас вниз
 MOVE_SPEED = 7
@@ -52,8 +66,9 @@ ANIMATION_FIRE_RIGHT=[('p_move/r_fire.png', 0.1)]
 ANIMATION_OVER_LEFT=[('p_move/l_lose.png', 0.1)]
 ANIMATION_OVER_RIGHT=[('p_move/r_lose.png', 0.1)]
 class Player(sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y,game):
         sprite.Sprite.__init__(self)
+        self.game=game
         self.xvel = 0  # скорость перемещения. 0 - стоять на месте
         self.startX = x  # Начальная позиция Х, пригодится когда будем переигрывать уровень
         self.startY = y
@@ -106,7 +121,15 @@ class Player(sprite.Sprite):
         self.boltAnimOverRight = pyganim.PygAnimation(ANIMATION_OVER_RIGHT)
         self.boltAnimOverRight.play()
 
-    def update(self, left, right,up,down,platforms):
+        #win the game
+        self.winner = False
+
+    def update(self, left, right,up,down,space,platforms):
+        if space:
+            self.image.fill(Color(COLOR))
+            projectile = Projectile(self,self.game)
+            self.game.projectilegroup.add(projectile)
+
 
         if up:
             if self.onGround:  # прыгаем, только когда можем оттолкнуться от земли
@@ -172,9 +195,10 @@ class Player(sprite.Sprite):
     def collide(self, xvel, yvel, platforms):
         for p in platforms:
             if sprite.collide_rect(self, p):  # если есть пересечение платформы с игроком
-                if isinstance(p, blocks.BlockDie):
-                    # если пересакаемый блок - blocks.BlockDie
+                if isinstance(p, blocks.BlockDie) or isinstance(p, monsters.Monster):  # если пересакаемый блок- blocks.BlockDie или Monster
                     self.die()  # умираем
+                elif isinstance(p, blocks.Kubok):# если коснулись кубка
+                    self.winner = True # победили!!!
                 else:
                     if xvel > 0:  # если движется вправо
                         self.rect.right = p.rect.left  # то не движется вправо
@@ -204,3 +228,28 @@ class Player(sprite.Sprite):
         time.wait(250)
         time.wait(250)
         self.teleporting(self.startX, self.startY)  # перемещаемся в начальные координаты
+
+class Projectile(sprite.Sprite):
+    def __init__(self,player,game):
+        sprite.Sprite.__init__(self)
+        if player.look_left==False:
+            self.xvel = 15
+            x = player.rect.right -60
+            y = player.rect.top + 18
+            self.image = bustershot1
+            self.rect = Rect(x, y, 100, 20)
+        else:
+            self.xvel = -15
+            x = player.rect.left - 340
+            y = player.rect.top + 18
+            self.image = pygame.transform.flip(bustershot1, True, False)
+            self.rect = Rect(x, y, 500, 20)
+
+
+    def update(self, platforms):
+        self.rect.left += self.xvel
+        self.collide(platforms)
+    def collide(self, platforms):
+        for p in platforms:
+            if pygame.sprite.collide_rect(self, p):
+                self.kill()
