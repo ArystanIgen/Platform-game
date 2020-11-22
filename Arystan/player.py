@@ -63,6 +63,24 @@ ANIMATION_FIRE_RIGHT=[('p_move/r_fire.png', 0.1)]
 
 ANIMATION_OVER_LEFT=[('p_move/l_lose.png', 0.1)]
 ANIMATION_OVER_RIGHT=[('p_move/r_lose.png', 0.1)]
+#falling
+ANIMATION_FALLING_LEFT=[('p_move/l_fal.png', 0.1)]
+ANIMATION_FALLING_RIGHT=[('p_move/r_fal.png', 0.1)]
+
+#jump fire
+ANIMATION_FIREJ_LEFT=[('p_move/l_j_f.png', 0.1)]
+ANIMATION_FIREJ_RIGHT=[('p_move/r_j_f.png', 0.1)]
+
+#BULLETS--------------------------------
+ANIMATION_BULLET_LEFT=[
+    ('bullets/fl1.png'),
+]
+ANIMATION_BULLET_RIGHT=[
+    ('bullets/fr1.png')
+]
+
+
+
 class Player(sprite.Sprite):
     def __init__(self, x, y,game):
         sprite.Sprite.__init__(self)
@@ -111,39 +129,73 @@ class Player(sprite.Sprite):
 
         self.boltAnimSitRight = pyganim.PygAnimation(ANIMATION_SIT_RIGHT)
         self.boltAnimSitRight.play()
+        #falling
+        self.boltAnimFallingLeft = pyganim.PygAnimation(ANIMATION_FALLING_LEFT)
+        self.boltAnimFallingLeft.play()
 
+        self.boltAnimFallingRight = pyganim.PygAnimation(ANIMATION_FALLING_RIGHT)
+        self.boltAnimFallingRight.play()
         #game_over
         self.boltAnimOverLeft = pyganim.PygAnimation(ANIMATION_OVER_LEFT)
         self.boltAnimOverLeft.play()
 
         self.boltAnimOverRight = pyganim.PygAnimation(ANIMATION_OVER_RIGHT)
         self.boltAnimOverRight.play()
+        #fire
+        self.boltAnimFireLeft = pyganim.PygAnimation(ANIMATION_FIRE_LEFT)
+        self.boltAnimFireLeft.play()
+
+        self.boltAnimFireRight = pyganim.PygAnimation(ANIMATION_FIRE_RIGHT)
+        self.boltAnimFireRight.play()
+
+        self.boltAnimFireJLeft = pyganim.PygAnimation(ANIMATION_FIREJ_LEFT)
+        self.boltAnimFireJLeft.play()
+
+        self.boltAnimFireJRight = pyganim.PygAnimation(ANIMATION_FIREJ_RIGHT)
+        self.boltAnimFireJRight.play()
+
 
     def update(self, left, right,up,down,space,platforms):
+
         if space:
-            self.image.fill(Color(COLOR))
             projectile = Projectile(self,self.game)
             self.game.projectilegroup.add(projectile)
-
 
         if up:
             if self.onGround:  # прыгаем, только когда можем оттолкнуться от земли
                 self.yvel = -JUMP_POWER
-            self.image.fill(Color(COLOR))
-            if self.look_left:
-                self.look_left=True# для прыжка влево есть отдельная анимация
-                self.boltAnimJumpLeft.blit(self.image, (0, 0))
 
+            self.image.fill(Color(COLOR))
+            if space:
+                self.image.fill(Color(COLOR))
+                projectile = Projectile(self, self.game)
+                self.game.projectilegroup.add(projectile)
+
+                if not self.look_left:
+                    self.boltAnimFireJRight.blit(self.image, (0, 0))
+                else:
+                    self.boltAnimFireJLeft.blit(self.image, (0, 0))
             else:
-                self.look_left = False
-                self.boltAnimJumpRight.blit(self.image, (0, 0))
+                if self.look_left:
+                    self.look_left=True# для прыжка влево есть отдельная анимация
+                    self.boltAnimJumpLeft.blit(self.image, (0, 0))
+
+                else:
+                    self.look_left = False
+                    self.boltAnimJumpRight.blit(self.image, (0, 0))
 
         if left:
             self.look_left = True
             self.xvel = -MOVE_SPEED  # Лево = x- n
             self.image.fill(Color(COLOR))
             if up:  # для прыжка влево есть отдельная анимация
-                self.boltAnimJumpLeft.blit(self.image, (0, 0))
+                if space:
+                    projectile = Projectile(self, self.game)
+                    self.game.projectilegroup.add(projectile)
+                    self.boltAnimFireJLeft.blit(self.image, (0, 0))
+
+                else:
+                    self.boltAnimJumpLeft.blit(self.image, (0, 0))
             else:
                 self.boltAnimLeft.blit(self.image, (0, 0))
 
@@ -152,18 +204,32 @@ class Player(sprite.Sprite):
             self.xvel = MOVE_SPEED  # Право = x + n
             self.image.fill(Color(COLOR))
             if up:
-                self.boltAnimJumpRight.blit(self.image, (0, 0))
+                if space:
+                    projectile = Projectile(self, self.game)
+                    self.game.projectilegroup.add(projectile)
+                    self.boltAnimFireJRight.blit(self.image, (0, 0))
+                else:
+                    self.boltAnimJumpRight.blit(self.image, (0, 0))
             else:
                 self.boltAnimRight.blit(self.image, (0, 0))
 
         if not (left or right):  # стоим, когда нет указаний идти
             self.xvel = 0
             if not up:
-                self.image.fill(Color(COLOR))
-                if not self.look_left:
-                    self.boltAnimStayRight.blit(self.image, (0, 0))
+                if space:
+                    self.image.fill(Color(COLOR))
+                    projectile = Projectile(self, self.game)
+                    self.game.projectilegroup.add(projectile)
+                    if not self.look_left:
+                        self.boltAnimFireRight.blit(self.image, (0, 0))
+                    else:
+                        self.boltAnimFireLeft.blit(self.image, (0, 0))
                 else:
-                    self.boltAnimStayLeft.blit(self.image, (0, 0))
+                    self.image.fill(Color(COLOR))
+                    if not self.look_left:
+                        self.boltAnimStayRight.blit(self.image, (0, 0))
+                    else:
+                        self.boltAnimStayLeft.blit(self.image, (0, 0))
             if down:
                 self.rect.height=HEIGHT-40 # прямоугольный объект
                 self.image.fill(Color(COLOR))
@@ -176,11 +242,32 @@ class Player(sprite.Sprite):
                     self.look_left = False
                     self.boltAnimSitRight.blit(self.image, (0, 0))
                     self.rect.height = HEIGHT
+        if self.yvel>1:
+            if not space:
+                self.image.fill(Color(COLOR))
+                if self.look_left:
+                    self.look_left = True  # для прыжка влево есть отдельная анимация
+                    self.boltAnimFallingLeft.blit(self.image, (0, 0))
 
+
+                else:
+                    self.look_left = False
+                    self.boltAnimFallingRight.blit(self.image, (0, 0))
         if not self.onGround:
+            '''
+            self.image.fill(Color(COLOR))
+            if self.look_left:
+                self.look_left = True  # для прыжка влево есть отдельная анимация
+                self.boltAnimFallingLeft.blit(self.image, (0, 0))
+                
+
+            else:
+                self.look_left = False
+                self.boltAnimFallingRight.blit(self.image, (0, 0))
+            '''
             self.yvel += GRAVITY
 
-        self.onGround = False;  # Мы не знаем, когда мы на земле((
+        self.onGround = False  # Мы не знаем, когда мы на земле((
         self.rect.y += self.yvel
         self.collide(0, self.yvel, platforms)
 
@@ -226,19 +313,35 @@ class Player(sprite.Sprite):
 class Projectile(sprite.Sprite):
     def __init__(self,player,game):
         sprite.Sprite.__init__(self)
+        self.image = Surface((20,10))
+        self.image.set_colorkey(Color(COLOR))
+        self.looking_left=False
+        boltAnim = []
+        for anim in ANIMATION_BULLET_RIGHT:
+            boltAnim.append((anim, ANIMATION_DELAY))
+        self.boltAnimBulletRight = pyganim.PygAnimation(boltAnim)
+        self.boltAnimBulletRight.play()
+        # Анимация движения влево
+        boltAnim = []
+        for anim in ANIMATION_BULLET_LEFT:
+            boltAnim.append((anim, ANIMATION_DELAY))
+        self.boltAnimBulletLeft = pyganim.PygAnimation(boltAnim)
+        self.boltAnimBulletLeft.play()
         if player.look_left==False:
+            self.looking_left=False
             self.xvel = 15
-            x = player.rect.right -60
-            y = player.rect.top + 18
-            self.image = bustershot1
-            self.rect = Rect(x, y, 100, 20)
-        else:
-            self.xvel = -15
-            x = player.rect.left - 340
-            y = player.rect.top + 18
-            self.image = pygame.transform.flip(bustershot1, True, False)
-            self.rect = Rect(x, y, 500, 20)
+            self.image=pygame.image.load("bullets/fr11.png")
 
+            x = player.rect.right -25
+            y = player.rect.top + 10
+            self.rect = Rect(x, y, 30, 20)
+        else:
+            self.looking_left=True
+            self.xvel = -15
+            self.image = pygame.image.load("bullets/fl11.png")
+            x = player.rect.left-7
+            y = player.rect.top + 10
+            self.rect = Rect(x, y,100 , 20)
 
     def update(self, platforms):
         self.rect.left += self.xvel
