@@ -1,5 +1,11 @@
 import pygame
 from pygame import *
+from main import *
+import os
+from pygame_menu import sound
+import pygame_menu
+from pygame import mixer
+from menu import menushka
 class Game(object):
     def __init__(self):
         # Create Sprite Groups
@@ -44,25 +50,91 @@ class Title(object):
         if self.counter == 100:
             ss = Entity()
             font = pygame.font.Font(None, 60)
-            ss.image = font.render("Loading...", 1,  (153, 255, 255))
+            ss.image = font.render("Loading.", 1,  (153, 255, 255))
             ss.rect = Rect(300,400,100,100)
             self.game.menugroup.add(ss)
             ps = Entity()
             ps.image = pygame.image.load('p_move/r1.png')
-            ps.rect = Rect(265,525,200,200)
+            ps.rect = Rect(226,525,200,200)
+            self.game.menugroup.add(ps)
+        if self.counter == 150:
+            self.game.menugroup.empty()
+            ss = Entity()
+            font = pygame.font.Font(None, 60)
+            ss.image = font.render("Loading..", 1,  (153, 255, 255))
+            ss.rect = Rect(300,400,100,100)
+            self.game.menugroup.add(ss)
+            ps = Entity()
+            ps.image = pygame.image.load('p_move/r2.png')
+            ps.rect = Rect(243,525,200,200)
+            self.game.menugroup.add(ps)
+        if self.counter == 200:
+            self.game.menugroup.empty()
+            ss = Entity()
+            font = pygame.font.Font(None, 60)
+            ss.image = font.render("Loading...", 1,  (153, 255, 255))
+            ss.rect = Rect(300,400,100,100)
+            self.game.menugroup.add(ss)
+            ps = Entity()
+            ps.image = pygame.image.load('p_move/r3.png')
+            ps.rect = Rect(260,525,200,200)
+            self.game.menugroup.add(ps)
+        if self.counter == 250:
+            self.game.menugroup.empty()
+            ss = Entity()
+            font = pygame.font.Font(None, 60)
+            ss.image = font.render("Loading.", 1,  (153, 255, 255))
+            ss.rect = Rect(300,400,100,100)
+            self.game.menugroup.add(ss)
+            ps = Entity()
+            ps.image = pygame.image.load('p_move/r4.png')
+            ps.rect = Rect(277,525,200,200)
             self.game.menugroup.add(ps)
         if self.counter == 300:
             self.game.menugroup.empty()
             ss = Entity()
             font = pygame.font.Font(None, 60)
-            ss.image = font.render("Featuring...", 1, (153, 255, 255))
+            ss.image = font.render("Loading..", 1, (153, 255, 255))
             ss.rect = Rect(300,400,100,100)
             self.game.menugroup.add(ss)
             ps = Entity()
-            ps.image = pygame.image.load("p_move/r2.png")
-            ps.rect = Rect(322,525,200,200)
+            ps.image = pygame.image.load("p_move/r5.png")
+            ps.rect = Rect(294,525,200,200)
             self.game.menugroup.add(ps)
-        if self.counter == 500:
+        if self.counter == 350:
+            self.game.menugroup.empty()
+            ss = Entity()
+            font = pygame.font.Font(None, 60)
+            ss.image = font.render("Loading...", 1,  (153, 255, 255))
+            ss.rect = Rect(300,400,100,100)
+            self.game.menugroup.add(ss)
+            ps = Entity()
+            ps.image = pygame.image.load('p_move/r6.png')
+            ps.rect = Rect(311,525,200,200)
+            self.game.menugroup.add(ps)
+        if self.counter == 400:
+            self.game.menugroup.empty()
+            ss = Entity()
+            font = pygame.font.Font(None, 60)
+            ss.image = font.render("Loading.", 1, (153, 255, 255))
+            ss.rect = Rect(300, 400, 100, 100)
+            self.game.menugroup.add(ss)
+            ps = Entity()
+            ps.image = pygame.image.load('p_move/r7.png')
+            ps.rect = Rect(328, 525, 200, 200)
+            self.game.menugroup.add(ps)
+        if self.counter == 450:
+            self.game.menugroup.empty()
+            ss = Entity()
+            font = pygame.font.Font(None, 60)
+            ss.image = font.render("Loading..", 1, (153, 255, 255))
+            ss.rect = Rect(300, 400, 100, 100)
+            self.game.menugroup.add(ss)
+            ps = Entity()
+            ps.image = pygame.image.load('p_move/r8.png')
+            ps.rect = Rect(345, 525, 200, 200)
+            self.game.menugroup.add(ps)
+        if self.counter == 550:
             self.game.menugroup.empty()
             ss = Entity()
             font = pygame.font.Font(None, 60)
@@ -74,6 +146,7 @@ class Title(object):
             ps.rect = Rect(379, 525, 200, 200)
             self.game.menugroup.add(ps)
         self.counter = self.counter + 1
+
 class Entity(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -101,7 +174,7 @@ class PauseMenu(object):
         for e in pygame.event.get():
             if e.type == QUIT: raise SystemExit
             if e.type == KEYDOWN and e.key == K_ESCAPE:
-                raise SystemExit
+                menushka()
             if e.type == KEYDOWN and e.key == K_SPACE:
                 self.game.screenfocus = "Game"
     def update(self):

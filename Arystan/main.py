@@ -4,6 +4,10 @@ from player import *
 from blocks import *
 from starting_game import *
 import pyganim
+from pygame import mixer
+from pygame_menu import sound
+import pygame_menu
+
 # Объявляем переменные
 WIN_WIDTH = 800 # Ширина создаваемого окна
 WIN_HEIGHT = 600  # Высота
@@ -33,10 +37,8 @@ def camera_configure(camera, target_rect):
 
 def main():
     game=Game()
-    xbg=ybg=0
-    xbg1=-WIN_WIDTH
-    ybg1=0
-    pygame.init()  # Инициация PyGame, обязательная строчка
+
+    pygame.init()# Инициация PyGame, обязательная строчка
     screen = pygame.display.set_mode(DISPLAY)  # Создаем окошко
     pygame.display.set_caption("Super p_move Boy")
     hero = Player(55, 55,game)  # создаем героя по (x,y) координатам
@@ -93,6 +95,8 @@ def main():
     bg.rect = Rect(0, 0, len(level[0]) * PLATFORM_WIDTH, len(level) * PLATFORM_HEIGHT)
     bg.image = pygame.transform.scale(bg.image, (len(level[0]) * PLATFORM_WIDTH, len(level) * PLATFORM_HEIGHT))
     game.backentity.add(bg)
+    mixer.music.load('AREKE.ogg')
+    mixer.music.play(-1)
     while 1:  # Основной цикл программы
         timer.tick(70)
         if game.screenfocus == "Title":
@@ -104,6 +108,7 @@ def main():
             for e in game.menugroup: screen.blit(e.image, (e.rect.x, e.rect.y))
             game.pausemenu.update()
         if game.screenfocus=='Game':
+
             for e in pygame.event.get():  # Обрабатываем события
                 if e.type == QUIT:
                     raise SystemExit
@@ -150,7 +155,5 @@ def main():
                 screen.blit(e.image,camera.apply(e))
         pygame.display.update()
         #обновление и вывод всех изменений на экран
-
-
 if __name__ == "__main__":
     main()

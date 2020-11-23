@@ -64,8 +64,8 @@ ANIMATION_FIRE_RIGHT=[('p_move/r_fire.png', 0.1)]
 ANIMATION_OVER_LEFT=[('p_move/l_lose.png', 0.1)]
 ANIMATION_OVER_RIGHT=[('p_move/r_lose.png', 0.1)]
 #falling
-ANIMATION_FALLING_LEFT=[('p_move/l_fal.png', 0.1)]
-ANIMATION_FALLING_RIGHT=[('p_move/r_fal.png', 0.1)]
+ANIMATION_FALLING_LEFT=[('p_move/l_jump.png', 0.1)]
+ANIMATION_FALLING_RIGHT=[('p_move/r_jump.png', 0.1)]
 
 #jump fire
 ANIMATION_FIREJ_LEFT=[('p_move/l_j_f.png', 0.1)]
