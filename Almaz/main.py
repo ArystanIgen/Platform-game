@@ -1,20 +1,18 @@
-from html import entities
-
 import pygame
-from IPython.core.release import platforms
 from pygame import *
-from Almaz.blocks import KUBOK
-from Almaz.monsters import Monster
-from Almaz.starting_game import Game
+from monsters import Monster
 from player import *
 from blocks import *
-from Almaz.starting_game import *
+from starting_game import *
 import pyganim
 # Объявляем переменные
-WIN_WIDTH = 800  # Ширина создаваемого окна
-WIN_HEIGHT = 640  # Высота
+WIN_WIDTH = 700  # Ширина создаваемого окна
+WIN_HEIGHT = 500  # Высота
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)  # Группируем ширину и высоту в одну переменную
 BACKGROUND_COLOR = "#004400"
+
+FILE_DIR = os.path.dirname(__file__)
+
 
 class Camera(object):
     def __init__(self, camera_func, width, height):
@@ -37,6 +35,32 @@ def camera_configure(camera, target_rect):
     t = min(0, t)                           # Не движемся дальше верхней границы
 
     return Rect(l, t, w, h)
+def levelload():
+    global playerX, playerY  # объявляем глобальные переменные, это координаты героя
+
+    levelFile = open('%s/levels/1.txt' % FILE_DIR)
+    line = " "
+    commands = []
+    while line[0] != "/":  # пока не нашли символ завершения файла
+        line = levelFile.readline()  # считываем построчно
+        if line[0] == "[":  # если нашли символ начала уровня
+            while line[0] != "]":  # то, пока не нашли символ конца уровня
+                line = levelFile.readline()  # считываем построчно уровень
+                if line[0] != "]":  # и если нет символа конца уровня
+                    endLine = line.find("|")  # то ищем символ конца строки
+                    level.append(line[0: endLine])  # и добавляем в уровень строку от начала до символа "|"
+
+        if line[0] != "":  # если строка не пустая
+            commands = line.split()  # разбиваем ее на отдельные команды
+            if len(commands) > 1:  # если количество команд > 1, то ищем эти команды
+                if commands[0] == "player":  # если первая команда - player
+                    playerX = int(commands[1])  # то записываем координаты героя
+                    playerY = int(commands[2])
+                if commands[0] == "monster":  # если первая команда monster, то создаем монстра
+                    mn = Monster(int(commands[1]), int(commands[2]), int(commands[3]), int(commands[4]),int(commands[5]), int(commands[6]))
+                    entities.add(mn)
+                    platforms.append(mn)
+                    monsters.add(mn)
 
 def main():
     game=Game()
@@ -46,43 +70,12 @@ def main():
     bg = Surface((WIN_WIDTH, WIN_HEIGHT))  # Создание видимой поверхности
     # будем использовать как фон
     bg.fill(Color(BACKGROUND_COLOR))  # Заливаем поверхность сплошным цветом
-    hero = Player(55, 55,game)  # создаем героя по (x,y) координатам
-    monsters = pygame.sprite.Group()
-    mn = Monster(190, 200, 2, 3, 150, 15)
-    entities.add(mn)
-    platforms.append(mn)
-    monsters.add(mn)
-    monsters.update(platforms)
+    hero = Player(55, 55)  # создаем героя по (x,y) координатам
+    monsters.update(platforms)  # передвигаем всех монстров
     left = right = False
     up=down=False
     space=False
     game.entities.add(hero)
-    level = [
-        "----------------------------------",
-        "-                                -",
-        "-                       --       -",
-        "-        *                       -",
-        "-                                -",
-        "-            --                  -",
-        "--                               -",
-        "-                    m           -",
-        "-                   ----     --- -",
-        "-                                -",
-        "--                               -",
-        "-            *                 с  -",
-        "-                            --- -",
-        "-                                -",
-        "-                                -",
-        "-  *   ---                  *    -",
-        "-        m                       -",
-        "-   -------         ----         -",
-        "-                                -",
-        "-                         -      -",
-        "-                            --  -",
-        "-           ***                  -",
-        "-                   m            -",
-        "----------------------------------"]
-
     timer = pygame.time.Clock()
     x = y = 0  # координаты
     for row in level:  # вся строка
@@ -95,11 +88,11 @@ def main():
                 bd = BlockDie(x, y)
                 game.entities.add(bd)
                 game.platforms.append(bd)
-            if col == "c":
-                kk = KUBOK(x,y)
-                entities.add(kk)
-                platforms.append(kk)
-                animatedEntities.add(kk)
+            if col =="C":
+                pr = Cup(x, y)
+                entities.add(pr)
+                platforms.append(pr)
+                animatedEntities.add(pr)
 
             x += PLATFORM_WIDTH  # блоки платформы ставятся на ширине блоков
         y += PLATFORM_HEIGHT  # то же самое и с высотой
@@ -153,6 +146,10 @@ def main():
         pygame.display.update()
         #обновление и вывод всех изменений на экран
 
-
+level = []
+entities = pygame.sprite.Group() # Все объекты
+animatedEntities = pygame.sprite.Group() # все анимированные объекты, за исключением героя
+monsters = pygame.sprite.Group() # Все передвигающиеся объекты
+platforms = [] # то, во что мы будем врезаться или опираться
 if __name__ == "__main__":
     main()

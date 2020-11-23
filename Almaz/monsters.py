@@ -7,8 +7,8 @@ MONSTER_HEIGHT = 32
 MONSTER_COLOR = "#2110FF"
 ICON_DIR = os.path.dirname(__file__)  # Полный путь к каталогу с файлами
 
-ANIMATION_MONSTERHORYSONTAL = [('fire1.png' % ICON_DIR),
-                               ('fire2.png' % ICON_DIR)]
+ANIMATION_MONSTERHORYSONTAL = [('%s/fire1.png' % ICON_DIR),
+                               ('%s/fire2.png' % ICON_DIR)]
 
 
 class Monster(sprite.Sprite):

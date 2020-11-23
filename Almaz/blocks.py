@@ -1,12 +1,12 @@
+import os
 from pygame import *
-from Almaz import pyganim
 
 PLATFORM_WIDTH = 32
 PLATFORM_HEIGHT = 32
 PLATFORM_COLOR = "#FF6262"
-ICON_DIR = os.path.dirname(__file__)  # Полный путь к каталогу с файлами
-ANIMATION_KUBOK = [
-            ('cup.png' % ICON_DIR)]
+ICON_DIR = os.path.dirname(__file__) #  Полный путь к каталогу с файлами
+ANIMATION_PRINCESS = [('%s/cup.png' % ICON_DIR)]
+
 class Platform(sprite.Sprite):
     def __init__(self, x, y):
         sprite.Sprite.__init__(self)
@@ -17,12 +17,11 @@ class BlockDie(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y)
         self.image = image.load("blocks/dieBlock.png")
-
-class KUBOK(Platform):
+class Cup(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y)
         boltAnim = []
-        for anim in ANIMATION_KUBOK:
+        for anim in ANIMATION_PRINCESS:
             boltAnim.append((anim, 0.8))
         self.boltAnim = pyganim.PygAnimation(boltAnim)
         self.boltAnim.play()
