@@ -15,6 +15,7 @@ from pygame import mixer
 pygame.init() #инициализировал миксер
 mixer.music.load('Battleship.ogg')
 mixer.music.play(-1)#loop
+pygame.mixer.music.set_volume(0.1)
 
 
 engine = sound.Sound()
@@ -58,10 +59,15 @@ about_menu.add_label('Zhenis Nursultan')
 color_menu = pygame_menu.Menu(400, 500, "Персонаж" ,theme=pygame_menu.themes.THEME_BLUE)
 menu.add_button(color_menu.get_title(), color_menu,shadow=True, shadow_color=(0, 0, 100),background_color=(255,255,255))
 color_menu.set_sound(engine, recursive=True)
-color_menu.add_button(' Красный ', pygame_menu.events.BACK,shadow=True ,shadow_color=(0, 0, 100),background_color=(255,255,255))
-color_menu.add_button(' Серый ', pygame_menu.events.BACK,shadow=True,shadow_color=(0, 0, 100), background_color=(255,255,255))
-color_menu.add_button(' Зеленый ', pygame_menu.events.BACK,shadow=True,shadow_color=(0, 0, 100), background_color=(255,255,255))
+#color_menu.add_button(' Красный ', pygame_menu.events.BACK,shadow=True ,shadow_color=(0, 0, 100),background_color=(255,255,255))
+#color_menu.add_button(' Серый ', pygame_menu.events.BACK,shadow=True,shadow_color=(0, 0, 100), background_color=(255,255,255))
+#color_menu.add_button(' Зеленый ', pygame_menu.events.BACK,shadow=True,shadow_color=(0, 0, 100), background_color=(255,255,255))
 color_menu.add_button(' Синий ', pygame_menu.events.BACK,shadow=True,shadow_color=(0, 0, 100), background_color=(255,255,255))
+color_menu.add_label('Другие цвета будут ')
+about_menu.add_vertical_margin(8)
+color_menu.add_label(' доступны в версии ')
+about_menu.add_vertical_margin(8)
+color_menu.add_label('  V.20121 ')
 
 menu.add_label(HELP, max_char=-1, font_size=20, margin=(0,0))
 menu.mainloop(surface)
