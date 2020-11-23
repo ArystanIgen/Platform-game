@@ -6,16 +6,16 @@
 #YELLOW = (255, 255, 0)
 
 
-import os
+import os,sys
 import pygame
 from pygame_menu import sound
 import pygame_menu
 from pygame import mixer
 
 pygame.init() #инициализировал миксер
-mixer.music.load('Battleship.ogg')
-mixer.music.play(-1)#loop
-pygame.mixer.music.set_volume(0.1)
+mixer.music.load('jr.mp3')
+mixer.music.play(0,20)  #loop
+pygame.mixer.music.set_volume(0.3)
 
 
 engine = sound.Sound()
@@ -30,6 +30,7 @@ pygame.init()
 HELP = " TROIA  TEAM"
 
 surface = pygame.display.set_mode((700, 500))
+
 
 
 menu = pygame_menu.Menu(400, 500, 'STORM GLASS', theme=pygame_menu.themes.THEME_BLUE,)
