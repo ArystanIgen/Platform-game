@@ -10,6 +10,12 @@ import os
 import pygame
 from pygame_menu import sound
 import pygame_menu
+from pygame import mixer
+
+pygame.init() #инициализировал миксер
+mixer.music.load('Battleship.ogg')
+mixer.music.play(-1)#loop
+
 
 engine = sound.Sound()
 engine.set_sound(sound.SOUND_TYPE_CLICK_MOUSE, 'Mouse Click Fast.wav')
@@ -55,7 +61,7 @@ color_menu.set_sound(engine, recursive=True)
 color_menu.add_button(' Красный ', pygame_menu.events.BACK,shadow=True ,shadow_color=(0, 0, 100),background_color=(255,255,255))
 color_menu.add_button(' Серый ', pygame_menu.events.BACK,shadow=True,shadow_color=(0, 0, 100), background_color=(255,255,255))
 color_menu.add_button(' Зеленый ', pygame_menu.events.BACK,shadow=True,shadow_color=(0, 0, 100), background_color=(255,255,255))
-color_menu.add_button(' Синий ', pygame_menu.events.BACK,shadow=True,shadow_color=(0, 0, 100), background_color=(255,255,255)t)
+color_menu.add_button(' Синий ', pygame_menu.events.BACK,shadow=True,shadow_color=(0, 0, 100), background_color=(255,255,255))
 
 menu.add_label(HELP, max_char=-1, font_size=20, margin=(0,0))
 menu.mainloop(surface)
