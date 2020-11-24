@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="11">
+ <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32" tilecount="117" columns="13">
+  <image source="tiles.png" width="417" height="288"/>
+ </tileset>
+ <layer id="1" name="BackGround" width="100" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztmTtvwjAURkMLa2mBrRRW2rL1yQIVtCyA+mClj///KzhsHsC4weFexfdIZ4nk689yrhMlWWYYhmEY8WhJBzAMhyGO8EVg7qbAnBvu8F5o7n3McI6LCLUk97YIYqxHcu9j7q0GyrYeI000nZOaskih6VzRlEUaze9NhpECGnpQQwbDSBn7jmiUlUts4xV2sCsbJ3l6eI03eIt92TjJ84CP+ITPOAgc5/ZU2dn1fCzin8MYJ/iKbzgNHOf2lI8KnuBp3oBHIEZGt0YVaznrvOMHfuIXLgPHuT3lu0/OsI7nObJdYOMf17M9WXZxSMZtNXz5fGyyr/Abf/AX/wLGGLpYA15/FJE=
+  </data>
+ </layer>
+ <layer id="2" name="Platforms" width="100" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztl9sKwyAMhnM3sffDl9j7v96QKWyph2jVpfh/EGqVQslnPBgiMoIAa5DkGj7WAR+6gA9dpHLN++BjHancSwOMR1If0u/AdVJzHT7m0LvumMY2kFHLmdTHEYK3QRs9PmLf8fXuQvA2aKOUszjHc/WB89V4Srl0lM8tcr0eF56959078hLEv9jRh0ejC0/Oxw57gzYXnpb6yPm5szdNLjy7rldaSfl40Pn+AdZQq4/WfWSHfWcmM9arO/nQvH+Mug+O9FFaL3vHItrOVh7N9WHp8382M+4y/bUxj5b7B583Wn1Y+vXBnVxxpel+zv8zvj8RSyPC2zHeqngXhA==
+  </data>
+ </layer>
+ <layer id="3" name="DieBlocks" width="100" height="25">
+  <data encoding="base64" compression="zlib">
+   eJzt2MEJwCAMAEA3ygLdf66+KxUspTXBu4+Cn5hECLYGAACQxzHYAwCwt3h5/pcscUB13lIe0a2s09dATdYZ5f7Lmvgnu1dlRtzBbK6r1KRybz2NLfNdYCTadU7t+/gEz2sEvw==
+  </data>
+ </layer>
+ <objectgroup id="4" name="Monsters">
+  <object id="1" name="Player" gid="98" x="90" y="745" width="32" height="32"/>
+  <object id="2" name="Princess" gid="97" x="2004" y="382" width="32" height="32">
+   <properties>
+    <property name="" value=""/>
+   </properties>
+  </object>
+  <object id="3" gid="99" x="1443" y="625" width="32" height="32">
+   <properties>
+    <property name="left" value="0"/>
+    <property name="maxLeft" value="0"/>
+    <property name="maxUp" value="64"/>
+    <property name="up" value="1"/>
+   </properties>
+  </object>
+  <object id="4" gid="99" x="2841" y="764" width="32" height="32">
+   <properties>
+    <property name="left" value="-3"/>
+    <property name="maxLeft" value="350"/>
+    <property name="maxUp" value="0"/>
+    <property name="up" value="0"/>
+   </properties>
+  </object>
+  <object id="5" gid="99" x="1664" y="621" width="32" height="32">
+   <properties>
+    <property name="left" value="0"/>
+    <property name="maxLeft" value="0"/>
+    <property name="maxUp" value="64"/>
+    <property name="up" value="2"/>
+   </properties>
+  </object>
+  <object id="6" gid="99" x="2535" y="763" width="32" height="32">
+   <properties>
+    <property name="left" value="2"/>
+    <property name="maxLeft" value="350"/>
+    <property name="maxUp" value="0"/>
+    <property name="up" value="0"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="5" name="Teleports">
+  <object id="7" gid="49" x="250" y="154" width="32" height="32">
+   <properties>
+    <property name="goX" value="6"/>
+    <property name="goY" value="17"/>
+   </properties>
+  </object>
+  <object id="8" gid="49" x="3009" y="701" width="32" height="32">
+   <properties>
+    <property name="goX" value="6"/>
+    <property name="goY" value="9"/>
+   </properties>
+  </object>
+  <object id="9" gid="49" x="320" y="286" width="32" height="32">
+   <properties>
+    <property name="goX" value="63"/>
+    <property name="goY" value="12"/>
+   </properties>
+  </object>
+  <object id="10" gid="49" x="416" y="284" width="32" height="32">
+   <properties>
+    <property name="goX" value="98"/>
+    <property name="goY" value="9"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
