@@ -23,7 +23,7 @@ def data_fun():
 pygame.init()  # инициализировал миксер
 mixer.music.load('jr.mp3')
 mixer.music.play(0, 20)  # loop
-pygame.mixer.music.set_volume(0.1)
+pygame.mixer.music.set_volume(0.06)
 
 engine = sound.Sound()
 engine.set_sound(sound.SOUND_TYPE_CLICK_MOUSE, 'Mouse Click Fast.wav')
@@ -70,16 +70,25 @@ color_menu = pygame_menu.Menu(600, 800, "HERO", theme=mytheme)
 menu.add_button(color_menu.get_title(), color_menu, font_color=(0,252,255),shadow_color=(255,0,0),shadow=True,
                 background_color=(0,0,0,0))
 color_menu.set_sound(engine, recursive=True)
-# color_menu.add_button(' Красный ', pygame_menu.events.BACK,shadow=True ,shadow_color=(0, 0, 100),background_color=(255,255,255))
 # color_menu.add_button(' Серый ', pygame_menu.events.BACK,shadow=True,shadow_color=(0, 0, 100), background_color=(255,255,255))
 # color_menu.add_button(' Зеленый ', pygame_menu.events.BACK,shadow=True,shadow_color=(0, 0, 100), background_color=(255,255,255))
-color_menu.add_button(' BLUE ', pygame_menu.events.BACK, font_color=(0,252,255),shadow_color=(255,0,0),font_size=50,shadow=True,
+color_menu.add_button(' BLUE ', pygame_menu.events.BACK, font_color=(0,0,255),shadow_color=(0,0,255),font_size=50,shadow=True,
                       background_color=(0,0,0,0))
-color_menu.add_label('other colors will be ',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
-about_menu.add_vertical_margin(8)
-color_menu.add_label(' available in version',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
-about_menu.add_vertical_margin(8)
-color_menu.add_label('   23430 ',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
+red_menu = pygame_menu.Menu(600, 800, "RED", theme=mytheme)
+color_menu.add_button(red_menu.get_title(), red_menu, font_size=50,font_color=(255,0,0),shadow_color=(0,0,0),shadow=True,background_color=(0,0,0,0))
+red_menu.add_label('other colors will be ',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
+red_menu.add_vertical_margin(8)
+red_menu.add_label(' available in version',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
+red_menu.add_vertical_margin(8)
+red_menu.add_label('   23430 ',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
+
+
+
+#color_menu.add_label('other colors will be ',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
+#about_menu.add_vertical_margin(8)
+#color_menu.add_label(' available in version',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
+#about_menu.add_vertical_margin(8)
+#color_menu.add_label('   23430 ',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
 menu.add_label(HELP, max_char=-1, font_size=20, margin=(1, 0),font_color=(0,252,255),shadow_color=(255,0,0),shadow=True)
 menu.add_vertical_margin(15)
 menu.add_button(' EXIT ', pygame_menu.events.EXIT,font_color=(255,0,0),shadow_color=(0,0,0,0),shadow=True,background_color=(0,0,0,0))
