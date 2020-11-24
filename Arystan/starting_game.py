@@ -5,7 +5,10 @@ import os
 from pygame_menu import sound
 import pygame_menu
 from pygame import mixer
+from Gifka import *
 from menu import menushka
+COLOR = "#888888"
+
 class Game(object):
     def __init__(self):
         # Create Sprite Groups
@@ -23,7 +26,11 @@ class Game(object):
         self.title = Title(self)
         self.pausemenu = PauseMenu(self)
         self.dieskeletgroup=pygame.sprite.Group()
-
+        self.monsters = pygame.sprite.Group()
+        self.level=[]
+        self.levelcomplete = LevelComplete(self)
+        self.cupgroup=pygame.sprite.Group()
+        self.gameover = GameOver(self)
 
 class Title(object):
     def __init__(self,game):
@@ -180,6 +187,56 @@ class PauseMenu(object):
                 self.game.screenfocus = "Game"
     def update(self):
         self.inputhandler()
+class Display(Entity):
+    def __init__(self, string):
+        Entity.__init__(self)
+        self.image = Surface((100,20))
+        self.image.fill(Color(COLOR))
+        self.image.set_colorkey(Color(COLOR))
+    def update(self, image1):
+        self.image = pygame.transform.scale(image1,(image1.get_width()//10,20))
 
-
+class LevelComplete(object):
+    def __init__(self,game):
+        self.game = game
+    def createlevelcomplete(self):
+        #Empty Sprite Groups
+        qw()
+    def update(self):
+        self.inputhandler()
+    def inputhandler(self):
+        for e in pygame.event.get():
+            if e.type == QUIT: raise SystemExit
+            if e.type == KEYDOWN and e.key == K_ESCAPE:
+                raise SystemExit
+            if e.type == KEYDOWN and e.key == K_SPACE:
+                menushka()
+class GameOver(object):
+    def __init__(self,game):
+        self.game = game
+        self.counter = 0
+    def creategameover(self):
+        #Empty Sprite Groups
+        self.game.titlegroup.empty()
+        self.game.menugroup.empty()
+        #Create Background Sprite
+        bg = Entity()
+        bg.image = pygame.image.load("blocks/over.jpg")
+        bg.image = pygame.transform.scale(bg.image, (800, 600))
+        self.game.titlegroup.add(bg)
+        #Create String Sprite
+        ps = Entity()
+        ps.image = pygame.image.load('p_move/r_lose.png')
+        ps.image = pygame.transform.scale(ps.image, (800, 600))
+        ps.rect = Rect(345, 525, 200, 200)
+        self.game.menugroup.add(ps)
+    def update(self):
+        self.inputhandler()
+    def inputhandler(self):
+        for e in pygame.event.get():
+            if e.type == QUIT: raise SystemExit
+            if e.type == KEYDOWN and e.key == K_ESCAPE:
+                raise SystemExit
+            if e.type == KEYDOWN and e.key == K_SPACE:
+                menushka()
 

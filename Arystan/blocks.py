@@ -37,3 +37,7 @@ class BlockDie(Platform):
         for j in projectilegroup:
             if pygame.sprite.collide_rect(self,j):
                 self.kill()
+class Cup(Platform):
+    def __init__(self, x, y):
+        Platform.__init__(self, x, y)
+        self.image = image.load("blocks/cup.png")

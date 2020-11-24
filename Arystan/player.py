@@ -2,6 +2,8 @@ from pygame import *
 import pyganim
 import blocks
 import pygame
+from starting_game import *
+import monsters
 JUMP_POWER = 10
 GRAVITY = 0.35 # Сила, которая будет тянуть нас вниз
 MOVE_SPEED = 7
@@ -68,25 +70,32 @@ ANIMATION_BULLET_RIGHT=[
     ('bullets/fr1.png')
 ]
 
+h1=pygame.image.load('blocks/1h.png')
+h2=pygame.image.load('blocks/2h.png')
+h3=pygame.image.load('blocks/3h.png')
+h4=pygame.image.load('blocks/4h.png')
+h5=pygame.image.load('blocks/5h.png')
 
 class Player(sprite.Sprite):
     def __init__(self, x, y,game):
         sprite.Sprite.__init__(self)
         self.game=game
+        self.damage=False
         self.xvel = 0  # скорость перемещения. 0 - стоять на месте
         self.startX = x  # Начальная позиция Х, пригодится когда будем переигрывать уровень
         self.startY = y
         self.image = Surface((WIDTH, HEIGHT))
         self.image.fill(Color(COLOR))
+        self.collideright = False
+        self.takingdamage = False
         self.rect = Rect(x, y, WIDTH, HEIGHT)  # прямоугольный объект
         self.yvel = 0  # скорость вертикального перемещения
         self.onGround = False  # На земле ли я?
         self.look_left=False
         self.image.set_colorkey(Color(COLOR))  # делаем фон прозрачным
         self.game_over=False
-        self.qw=pygame.image.load("heart.png")
-        self.lifetotal = ["", "l", "ll", "lll", "llll", "lllll", "llllll", "lllllll", "llllllll", "lllllllll"]
-        self.currentlifetotal = 9
+        self.lifetotal = [h1,h1,h2,h3,h4,h5]
+        self.currentlifetotal = 5
         #Анимация движения вправо
         boltAnim = []
         for anim in ANIMATION_RIGHT:
@@ -257,20 +266,31 @@ class Player(sprite.Sprite):
                 self.boltAnimFallingRight.blit(self.image, (0, 0))
             '''
             self.yvel += GRAVITY
-
+        if self.takingdamage:
+            if self.collideright:
+                self.xvel = -8
+            else:
+                self.xvel = 8
         self.onGround = False  # Мы не знаем, когда мы на земле((
         self.rect.y += self.yvel
-        self.collide(0, self.yvel, platforms)
+        self.collide(0, self.yvel, platforms,self.game)
 
         self.rect.x += self.xvel  # переносим свои положение на xvel
-        self.collide(self.xvel,0, platforms)
+        self.collide(self.xvel,0, platforms,self.game)
 
-    def collide(self, xvel, yvel, platforms):
+    def collide(self, xvel, yvel, platforms,game):
         for p in platforms:
             if sprite.collide_rect(self, p):  # если есть пересечение платформы с игроком
-                if isinstance(p, blocks.BlockDie):
-                    # если пересакаемый блок - blocks.BlockDie
-                    self.die()  # умираем
+                if isinstance(p, blocks.BlockDie) or isinstance(p,monsters.Monster):  # если пересакаемый блок- blocks.BlockDie или Monster
+                    self.die()
+                    self.currentlifetotal = self.currentlifetotal - 1
+                    if self.currentlifetotal <= 0:
+                        game.gameover.creategameover()
+                        game.screenfocus = "Game Over"
+                        self.currentlifetotal = 0
+                elif isinstance(p, blocks.Cup):  # если коснулись принцессы
+                    self.game.levelcomplete.createlevelcomplete()
+                    self.game.screenfocus = "Level Complete"
                 else:
                     if xvel > 0:  # если движется вправо
                         self.rect.right = p.rect.left  # то не движется вправо
@@ -286,6 +306,20 @@ class Player(sprite.Sprite):
                     if yvel < 0:  # если движется вверх
                         self.rect.top = p.rect.bottom  # то не движется вверх
                         self.yvel = 0  # и энергия прыжка пропадает
+        for j in self.game.dieskeletgroup:
+            if sprite.collide_rect(self, j):
+                leftdifference = self.rect.right
+                rightdifference = self.rect.left
+                if self.xvel == 0:
+                    if abs(leftdifference) < 10: self.collideright = True
+                    if abs(rightdifference) < 10: self.collideright = False
+                self.takingdamage = True
+                self.currentlifetotal = self.currentlifetotal - 1
+                if self.currentlifetotal <= 0:
+                    game.gameover.creategameover()
+                    game.screenfocus = "Game Over"
+                    self.currentlifetotal = 0
+
 
     def teleporting(self, goX, goY):
         self.rect.x = goX
