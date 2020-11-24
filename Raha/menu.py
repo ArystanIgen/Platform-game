@@ -39,12 +39,12 @@ mytheme = pygame_menu.themes.Theme(widget_font=font,background_color=(0, 0, 0, 0
                 title_shadow=True,
                 title_background_color=(4, 47, 126))
 myimage = pygame_menu.baseimage.BaseImage(
-    image_path='title2.png',
+    image_path='space.png',
     drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL,
 )
 mytheme.background_color = myimage
 surface = pygame.display.set_mode((800, 600))
-bg=pygame.image.load("title2.png")
+bg=pygame.image.load("space.png")
 menu = pygame_menu.Menu(600, 800, 'STORM GLASS', theme=mytheme)
 menu.set_sound(engine, recursive=True)  # добавляем звук клика мыши в основное меню
 menu.add_text_input('NAME ', font_color=(0,252,255),shadow_color=(255,0,0),shadow=True, default='PLAYER',background_color=(0, 0, 0,0))
@@ -82,6 +82,16 @@ red_menu.add_label(' available in version',font_color=(0,0,0,0),font_size=20,sha
 red_menu.add_vertical_margin(8)
 red_menu.add_label('   23430 ',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
 
+rules_menu = pygame_menu.Menu(600, 800, "RULES", theme=mytheme)
+menu.add_button(rules_menu.get_title(), rules_menu, font_color=(0,252,255),shadow_color=(255,0,0),shadow=True,background_color=(0,0,0,0))
+
+rules_menu.add_label('Moving',font_color=(0,252,255),shadow_color=(255,0,0),shadow=True,margin=(-200,0))
+rules_menu.add_vertical_margin(-100)
+rules_menu.add_image('mm.png',  scale=(0.15, 0.15),margin=(0,0))
+
+rules_menu.add_label('shooting',font_color=(0,252,255),shadow_color=(255,0,0),shadow=True,margin=(-200,0))
+rules_menu.add_vertical_margin(-40)
+rules_menu.add_image('space-key.png',  scale=(0.20, 0.20),margin=(50,0))
 
 
 #color_menu.add_label('other colors will be ',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
