@@ -1,5 +1,5 @@
 from pygame import *
-
+import pygame
 import monsters
 import pyganim
 import blocks
@@ -53,6 +53,8 @@ ANIMATION_FIRE_RIGHT=[('p_move/r_fire.png', 0.1)]
 
 ANIMATION_OVER_LEFT=[('p_move/l_lose.png', 0.1)]
 ANIMATION_OVER_RIGHT=[('p_move/r_lose.png', 0.1)]
+ANIMATION_BULLET_LEFT=[('blocks/fl1.png')]
+ANIMATION_BULLET_RIGHT=[('blocks/fr1.png')]
 class Player(sprite.Sprite):
     def __init__(self, x, y):
         sprite.Sprite.__init__(self)
@@ -209,3 +211,44 @@ class Player(sprite.Sprite):
         time.wait(250)
         time.wait(250)
         self.teleporting(self.startX, self.startY)  # перемещаемся в начальные координаты
+
+class Projectile(sprite.Sprite):
+    def __init__(self,player,game):
+        sprite.Sprite.__init__(self)
+        self.image = Surface((20,10))
+        self.image.set_colorkey(Color(COLOR))
+        self.looking_left=False
+        boltAnim = []
+        for anim in ANIMATION_BULLET_RIGHT:
+            boltAnim.append((anim, ANIMATION_DELAY))
+        self.boltAnimBulletRight = pyganim.PygAnimation(boltAnim)
+        self.boltAnimBulletRight.play()
+        # Анимация движения влево
+        boltAnim = []
+        for anim in ANIMATION_BULLET_LEFT:
+            boltAnim.append((anim, ANIMATION_DELAY))
+        self.boltAnimBulletLeft = pyganim.PygAnimation(boltAnim)
+        self.boltAnimBulletLeft.play()
+        if player.look_left==False:
+            self.looking_left=False
+            self.xvel = 15
+            self.image=pygame.image.load("bullets/fr11.png")
+
+            x = player.rect.right -25
+            y = player.rect.top + 10
+            self.rect = Rect(x, y, 30, 20)
+        else:
+            self.looking_left=True
+            self.xvel = -15
+            self.image = pygame.image.load("bullets/fl11.png")
+            x = player.rect.left-7
+            y = player.rect.top + 10
+            self.rect = Rect(x, y,100 , 20)
+
+    def update(self, platforms):
+        self.rect.left += self.xvel
+        self.collide(platforms)
+    def collide(self, platforms):
+        for p in platforms:
+            if pygame.sprite.collide_rect(self, p):
+                self.kill()

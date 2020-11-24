@@ -5,6 +5,9 @@ import os
 MONSTER_WIDTH = 32
 MONSTER_HEIGHT = 32
 MONSTER_COLOR = "#2110FF"
+GREEN = (0,255,0)
+YELLOW = (255,255,0)
+RED = (255,0,0)
 ICON_DIR = os.path.dirname(__file__)  # Полный путь к каталогу с файлами
 
 ANIMATION_MONSTERHORYSONTAL = [('%s/fire1.png' % ICON_DIR),
@@ -29,6 +32,7 @@ class Monster(sprite.Sprite):
             boltAnim.append((anim, 0.3))
         self.boltAnim = pyganim.PygAnimation(boltAnim)
         self.boltAnim.play()
+        self.health = 100
 
     def update(self, platforms):  # по принципу героя
 
@@ -44,6 +48,9 @@ class Monster(sprite.Sprite):
             self.xvel = -self.xvel  # если прошли максимальное растояние, то идет в обратную сторону
         if (abs(self.startY - self.rect.y) > self.maxLengthUp):
             self.yvel = -self.yvel  # если прошли максимальное растояние, то идет в обратную сторону, вертикаль
+
+        if self.health <= 0:
+            self.kill()
 
     def collide(self, platforms):
         for p in platforms:
