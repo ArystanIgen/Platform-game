@@ -22,6 +22,7 @@ class Game(object):
         self.screenfocus = "Title"
         self.title = Title(self)
         self.pausemenu = PauseMenu(self)
+        self.dieskeletgroup=pygame.sprite.Group()
 
 
 class Title(object):
@@ -179,3 +180,6 @@ class PauseMenu(object):
                 self.game.screenfocus = "Game"
     def update(self):
         self.inputhandler()
+
+
+

@@ -2,17 +2,6 @@ from pygame import *
 import pyganim
 import blocks
 import pygame
-spritesheet = pygame.image.load("blocks/bustershots2.png")
-character = Surface((12,13),pygame.SRCALPHA)
-character.blit(spritesheet,(-37,-80))
-character = pygame.transform.scale(character, (40,20))
-stage = Surface((400,250),pygame.SRCALPHA)
-stage.blit(character,(40,0))
-bustershot1 = stage
-
-
-
-
 JUMP_POWER = 10
 GRAVITY = 0.35 # Сила, которая будет тянуть нас вниз
 MOVE_SPEED = 7
@@ -80,7 +69,6 @@ ANIMATION_BULLET_RIGHT=[
 ]
 
 
-
 class Player(sprite.Sprite):
     def __init__(self, x, y,game):
         sprite.Sprite.__init__(self)
@@ -96,6 +84,9 @@ class Player(sprite.Sprite):
         self.look_left=False
         self.image.set_colorkey(Color(COLOR))  # делаем фон прозрачным
         self.game_over=False
+        self.qw=pygame.image.load("heart.png")
+        self.lifetotal = ["", "l", "ll", "lll", "llll", "lllll", "llllll", "lllllll", "llllllll", "lllllllll"]
+        self.currentlifetotal = 9
         #Анимация движения вправо
         boltAnim = []
         for anim in ANIMATION_RIGHT:
@@ -331,17 +322,16 @@ class Projectile(sprite.Sprite):
             self.looking_left=False
             self.xvel = 15
             self.image=pygame.image.load("bullets/fr11.png")
-
             x = player.rect.right -25
             y = player.rect.top + 10
-            self.rect = Rect(x, y, 30, 20)
+            self.rect = Rect(x, y, 20, 20)
         else:
             self.looking_left=True
             self.xvel = -15
             self.image = pygame.image.load("bullets/fl11.png")
             x = player.rect.left-7
             y = player.rect.top + 10
-            self.rect = Rect(x, y,100 , 20)
+            self.rect = Rect(x, y,20 , 20)
 
     def update(self, platforms):
         self.rect.left += self.xvel
@@ -350,3 +340,4 @@ class Projectile(sprite.Sprite):
         for p in platforms:
             if pygame.sprite.collide_rect(self, p):
                 self.kill()
+

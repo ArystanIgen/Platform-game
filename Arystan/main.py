@@ -37,7 +37,6 @@ def camera_configure(camera, target_rect):
 
 def main():
     game=Game()
-
     pygame.init()# Инициация PyGame, обязательная строчка
     screen = pygame.display.set_mode(DISPLAY)  # Создаем окошко
     pygame.display.set_caption("Super p_move Boy")
@@ -81,7 +80,8 @@ def main():
                 game.platforms.append(pf)
             if col == "*":
                 bd = BlockDie(x, y)
-                game.entities.add(bd)
+                game.dieskeletgroup.add(bd)
+
                 game.platforms.append(bd)
 
             x += PLATFORM_WIDTH  # блоки платформы ставятся на ширине блоков
@@ -96,6 +96,7 @@ def main():
     bg.image = pygame.transform.scale(bg.image, (len(level[0]) * PLATFORM_WIDTH, len(level) * PLATFORM_HEIGHT))
     game.backentity.add(bg)
     mixer.music.load('AREKE.ogg')
+    pygame.mixer.music.set_volume(0.05)
     mixer.music.play(-1)
     while 1:  # Основной цикл программы
         timer.tick(70)
@@ -108,7 +109,6 @@ def main():
             for e in game.menugroup: screen.blit(e.image, (e.rect.x, e.rect.y))
             game.pausemenu.update()
         if game.screenfocus=='Game':
-
             for e in pygame.event.get():  # Обрабатываем события
                 if e.type == QUIT:
                     raise SystemExit
@@ -142,12 +142,17 @@ def main():
                 if e.type == KEYDOWN and e.key == K_ESCAPE:
                     game.pausemenu.createpausemenu()
                     game.screenfocus = "Pause Menu"
+
             for e in game.backentity:
                 screen.blit(e.image, camera.apply(e))
             #Каждую итерацию необходимо всё перерисовывать
             hero.update(left,right,up,down,space,game.platforms)
             # передвижение
-            camera.update(hero)  # центризируем камеру относительно персонажа
+            camera.update(hero)
+            for e in game.dieskeletgroup:
+                e.update(game.projectilegroup)
+                screen.blit(e.image, camera.apply(e))
+            # центризируем камеру относительно персонажа
             for e in game.entities:
                 screen.blit(e.image, camera.apply(e))
             for e in game.projectilegroup:
