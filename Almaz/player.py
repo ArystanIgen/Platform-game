@@ -182,6 +182,8 @@ class Player(sprite.Sprite):
                     self.die()  # умираем
                 elif isinstance(p, blocks.Cup):  # если коснулись принцессы
                     self.winner = True  # победили!!!
+                elif isinstance(p, blocks.BlockTeleport): #добавим нашему герою поведение при соприкосновении с порталом
+                    self.teleporting(p.goX, p.goY)
                 else:
                     if xvel > 0:  # если движется вправо
                         self.rect.right = p.rect.left  # то не движется вправо

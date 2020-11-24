@@ -60,6 +60,11 @@ def loadLevel():
                 if commands[0] == "player":  # если первая команда - player
                     playerX = int(commands[1])  # то записываем координаты героя
                     playerY = int(commands[2])
+                if commands[0] == "portal":  # если первая команда portal, то создаем портал
+                    tp = BlockTeleport(int(commands[1]), int(commands[2]), int(commands[3]), int(commands[4]))
+                    entities.add(tp)
+                    platforms.append(tp)
+                    animatedEntities.add(tp)
                 if commands[0] == "monster":  # если первая команда monster, то создаем монстра
                     mn = Monster(int(commands[1]), int(commands[2]), int(commands[3]), int(commands[4]),
                                  int(commands[5]), int(commands[6]))
