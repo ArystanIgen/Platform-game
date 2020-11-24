@@ -20,3 +20,4 @@ class Cup(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y)
         self.image = image.load("blocks/cup.png")
+        self.image = transform.scale(self.image,(32,32))
