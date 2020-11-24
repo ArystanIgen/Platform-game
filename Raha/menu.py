@@ -48,7 +48,7 @@ bg=pygame.image.load("title2.png")
 menu = pygame_menu.Menu(600, 800, 'STORM GLASS', theme=mytheme)
 menu.set_sound(engine, recursive=True)  # добавляем звук клика мыши в основное меню
 menu.add_text_input('NAME ', font_color=(0,252,255),shadow_color=(255,0,0),shadow=True, default='PLAYER',background_color=(0, 0, 0,0))
-menu.add_button('SAVE NAME', data_fun,font_color=(255,0,0),shadow_color=(0,0,0,0),shadow=True,background_color=(0,0,0,0))
+menu.add_button('SAVE NAME', data_fun,font_size=40,font_color=(255,0,0),shadow_color=(0,0,0,0),shadow=True,background_color=(0,0,0,0))
 
 about_menu = pygame_menu.Menu(600, 800, "ABOUT", theme=mytheme)
 PATH = os.path.join(os.path.dirname(pygame_menu.__file__),
@@ -89,8 +89,8 @@ red_menu.add_label('   23430 ',font_color=(0,0,0,0),font_size=20,shadow_color=(2
 #color_menu.add_label(' available in version',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
 #about_menu.add_vertical_margin(8)
 #color_menu.add_label('   23430 ',font_color=(0,0,0,0),font_size=20,shadow_color=(255,255,255),shadow=True)
-menu.add_label(HELP, max_char=-1, font_size=20, margin=(1, 0),font_color=(0,252,255),shadow_color=(255,0,0),shadow=True)
+menu.add_label(HELP, max_char=-1, font_size=15, margin=(1, 0),font_color=(0,252,255),shadow_color=(255,0,0),shadow=True)
 menu.add_vertical_margin(15)
-menu.add_button(' EXIT ', pygame_menu.events.EXIT,font_color=(255,0,0),shadow_color=(0,0,0,0),shadow=True,background_color=(0,0,0,0))
+menu.add_button(' EXIT ', pygame_menu.events.EXIT,font_size=40,font_color=(255,0,0),shadow_color=(0,0,0,0),shadow=True,background_color=(0,0,0,0))
 menu.mainloop(surface)
 
